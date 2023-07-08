@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootTest
 public class ProductRepositoryTestByQueryMethod {
@@ -43,6 +44,8 @@ public class ProductRepositoryTestByQueryMethod {
         Product savedProduct2 = productRepository.save(product2);
         Product savedProduct3 = productRepository.save(product3);
 
-        
+        productRepository.findByName("펜", Sort.by(Sort.Order.asc("price")));
+        productRepository.findByName("펜", Sort.by(Sort.Order.asc("price"), Sort.Order.desc("stock")));
+
     }
 }
