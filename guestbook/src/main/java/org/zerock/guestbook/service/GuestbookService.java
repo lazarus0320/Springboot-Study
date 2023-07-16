@@ -5,6 +5,8 @@ import org.zerock.guestbook.dto.PageRequestDTO;
 import org.zerock.guestbook.dto.PageResultDTO;
 import org.zerock.guestbook.entity.Guestbook;
 
+import java.util.Optional;
+
 public interface GuestbookService {
     Long register(GuestbookDTO dto);
 
@@ -31,4 +33,7 @@ public interface GuestbookService {
                 .build();
         return dto;
     }
+    GuestbookDTO read(Long gno);
+    void remove(Long gno);
+    void modify(GuestbookDTO dto);
 }
