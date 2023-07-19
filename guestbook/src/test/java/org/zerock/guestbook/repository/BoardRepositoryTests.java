@@ -3,11 +3,18 @@ package org.zerock.guestbook.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.guestbook.entity.Board;
 import org.zerock.guestbook.entity.Member;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
@@ -49,5 +56,27 @@ public class BoardRepositoryTests {
 
         System.out.println("-----------------------------");
         System.out.println(Arrays.toString(arr));
+    }
+
+    @Test
+    public void testGetBoardWithReply() {
+        List<Object[]> result = boardRepository.getBoardWithReply(100L);
+        for (Object[] arr: result) {
+            System.out.println(Arrays.toString(arr));
+        }
+    }
+
+    @Test
+    public void testWithReplyCount() {
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
+        Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageable);
+        result.get().forEach(row -> System.out.println(Arrays.toString((Object[])row)));
+
+    }
+
+    @Test
+    public void testRead3() {
+        Object[] result = (Object[]) boardRepository.getBoardByBno(100L);
+        System.out.println(Arrays.toString(result));
     }
 }
