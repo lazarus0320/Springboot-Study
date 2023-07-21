@@ -10,6 +10,8 @@ public interface BoardService {
     Long register(BoardDTO dto);
     PageResultDTO<BoardDTO, Object[]> getList(PageRequestDTO pageRequestDTO);
     BoardDTO get(Long bno);
+    void removeWithReplies(Long bno); // 댓글 삭제 기능
+    void modify(BoardDTO boardDTO); // 게시글 수정 기능
 
     default Board dtoToEntity(BoardDTO dto) {
         Member member = Member.builder()

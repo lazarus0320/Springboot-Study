@@ -2,16 +2,20 @@ package org.zerock.guestbook.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zerock.guestbook.dto.BoardDTO;
 import org.zerock.guestbook.dto.PageRequestDTO;
 import org.zerock.guestbook.dto.PageResultDTO;
 import org.zerock.guestbook.entity.Board;
 import org.zerock.guestbook.entity.Member;
 import org.zerock.guestbook.repository.BoardRepository;
+import org.zerock.guestbook.repository.ReplyRepository;
 
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
@@ -19,6 +23,7 @@ import java.util.function.Function;
 @Log4j2
 public class BoardServiceImpl implements BoardService{
     private final BoardRepository repository;
+    private final ReplyRepository replyRepository;
 
     @Override
     public Long register(BoardDTO dto) {
@@ -44,4 +49,25 @@ public class BoardServiceImpl implements BoardService{
         Object[] arr = (Object[]) repository.getBoardByBno(bno);
         return entityToDTO((Board)arr[0], (Member)arr[1], (long)arr[2]);
     }
+
+    @Transactional
+    @Override
+    public void removeWithReplies(Long bno) {
+        replyRepository.deleteByBno(bno);
+        repository.deleteById(bno);
+    }
+
+    @Override
+    public void modify(BoardDTO boardDTO) {
+        Optional<Board> optionalBoard = repository.findById(boardDTO.getBno());
+        if (optionalBoard.isPresent()) {
+            Board board = optionalBoard.get();
+            board.changeTitle(boardDTO.getTitle());
+            board.changeContent(boardDTO.getContent());
+            repository.save(board);
+        } else {
+            throw new IllegalArgumentException("Board not found with bno: " + boardDTO.getBno());
+        }
+    }
+
 }
