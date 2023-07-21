@@ -2,17 +2,22 @@ package org.zerock.guestbook.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.guestbook.dto.BoardDTO;
 import org.zerock.guestbook.dto.PageRequestDTO;
 import org.zerock.guestbook.dto.PageResultDTO;
+import org.zerock.guestbook.repository.search.SearchBoardRepository;
 
 @SpringBootTest
 public class BoardServiceTests {
 
     @Autowired
     private BoardService boardService;
+    @Autowired
+    @Qualifier("boardRepository")
+    private SearchBoardRepository boardRepository;
 
     @Test
     public void testRegister() {
@@ -49,10 +54,12 @@ public class BoardServiceTests {
     @Test
     public void testModify() {
         BoardDTO boardDTO = BoardDTO.builder()
-                .bno(2L)
+                .bno(3L)
                 .title("제목 변경합니다.")
                 .content("내용 변경합니다.")
                 .build();
         boardService.modify(boardDTO);
     }
+
+
 }
