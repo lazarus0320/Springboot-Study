@@ -1,4 +1,4 @@
-package org.zerock.guestbook.entity;
+package org.zerock.mreview.entity;
 
 import lombok.*;
 
@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Getter
 @ToString
 @Table(name = "m_member")
-public class Member extends BaseEntity{
+public class Member2 extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mid;
