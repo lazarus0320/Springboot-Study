@@ -19,7 +19,7 @@ public class Review extends BaseEntity {
     private Movie movie;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member2 member;
+    private Member member;
 
     private int grade;
     private String text;
