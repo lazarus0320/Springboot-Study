@@ -2,7 +2,6 @@ package org.zerock.mreview.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.cglib.core.internal.Function;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -16,9 +15,11 @@ import org.zerock.mreview.entity.MovieImage;
 import org.zerock.mreview.repository.MovieImageRepository;
 import org.zerock.mreview.repository.MovieRepository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 @Service
 @Log4j2
@@ -45,6 +46,12 @@ public class MovieServiceImpl implements MovieService{
     {
         Pageable pageable = requestDTO.getPageable(Sort.by("mno").descending());
         Page<Object[]> result = movieRepository.getListPage(pageable);
+
+        log.info("==============================================");
+        result.getContent().forEach(arr -> {
+            log.info(Arrays.toString(arr));
+        });
+
         Function<Object[], MovieDTO> fn = (arr -> entitiesToDTO(
                 (Movie)arr[0],
                 (List<MovieImage>)(Arrays.asList((MovieImage)arr[1])),
@@ -52,5 +59,22 @@ public class MovieServiceImpl implements MovieService{
                 (Long)arr[3])
         );
         return new PageResultDTO<>(result, fn);
+    }
+
+    @Override
+    public MovieDTO getMovie(Long mno) {
+        List<Object[]> result = movieRepository.getMovieWithAll(mno);
+        Movie movie = (Movie) result.get(0)[0];
+
+        List<MovieImage> movieImageList = new ArrayList<>();
+
+        result.forEach(arr -> {
+            MovieImage movieImage = (MovieImage) arr[1];
+            movieImageList.add(movieImage);
+        });
+
+        Double avg = (Double) result.get(0)[2];
+        Long reviewCnt = (Long) result.get(0)[3];
+        return entitiesToDTO(movie, movieImageList, avg, reviewCnt);
     }
 }
