@@ -68,4 +68,7 @@ public class MemberControllerTest {
                 .userParameter("email").user(email).password("12345"))
                 .andExpect(SecurityMockMvcResultMatchers.unauthenticated());
     }
+
+
+
 }
