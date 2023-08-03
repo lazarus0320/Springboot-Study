@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -25,7 +24,7 @@ public class SecurityConfig {
                 .loginPage("/member/login")
                 .defaultSuccessUrl("/")
                 .usernameParameter("email")
-                .failureUrl("/member/login/fail")
+                .failureUrl("/member/login/error")
                 .and()
                 .logout()
                 .logoutRequestMatcher(new AntPathRequestMatcher("/member/logout"))
@@ -33,9 +32,10 @@ public class SecurityConfig {
         ;
 
         http.authorizeRequests()
-              .mvcMatchers("/", "/member/**", "/item/**").permitAll()
-                .mvcMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated();
+                .antMatchers("/css/**", "/js/**", "/img/**").permitAll()
+                .antMatchers("/", "/member/**", "/item/**", "/images/**").permitAll()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
         ;
 
         http.exceptionHandling()
@@ -43,11 +43,6 @@ public class SecurityConfig {
         ;
 
         return http.build();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers("/static/js/**", "/static/image/**", "/static/css/**", "/static/scss/**").anyRequest();
     }
 
     @Bean
