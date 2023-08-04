@@ -51,7 +51,7 @@ public class MemberController {
     }
 
     // 로그인 실패
-    @GetMapping("/login/fail")
+    @GetMapping("/login/error")
     public String memberLoginFail(Model model) {
         model.addAttribute("loginFailMsg", "아이디 또는 비밀번호를 확인해주세요.");
         return "/member/loginForm";
