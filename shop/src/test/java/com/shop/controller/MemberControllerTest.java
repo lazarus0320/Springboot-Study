@@ -49,7 +49,7 @@ public class MemberControllerTest {
         String password = "1234";
         this.createMember(email, password);
 
-        mockMvc.perform(formLogin().loginProcessingUrl("/member/login")
+        mockMvc.perform(formLogin().loginProcessingUrl("/members/login")
                 .userParameter("email")
                 .user(email)
                 .password(password))
@@ -64,7 +64,7 @@ public class MemberControllerTest {
         String password = "1234";
         this.createMember(email, password);
 
-        mockMvc.perform(formLogin("/member/login")
+        mockMvc.perform(formLogin("/members/login")
                 .userParameter("email").user(email).password("12345"))
                 .andExpect(SecurityMockMvcResultMatchers.unauthenticated());
     }
