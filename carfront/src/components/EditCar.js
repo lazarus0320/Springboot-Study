@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 
-const AddCar = (props) => {
+const EditCar = (props) => {
   const [open, setOpen] = useState(false);
   const [car, setCar] = useState({
     brand: '',
@@ -18,7 +18,14 @@ const AddCar = (props) => {
   });
 
   const handleClickOpen = () => {
-    // 모달 폼 열기
+    setCar({
+      brand: props.data.row.brand,
+      model: props.data.row.model,
+      color: props.data.row.color,
+      year: props.data.row.year,
+      fuel: props.data.row.fuel,
+      price: props.data.row.price,
+    });
     setOpen(true);
   };
 
@@ -27,21 +34,18 @@ const AddCar = (props) => {
   };
 
   const handleChange = (event) => {
-    // props로 넘어온 키 값에 대해 car State에 변경된 값 적용
     setCar({ ...car, [event.target.name]: event.target.value });
   };
 
   const handleSave = () => {
-    // AddCar 컴포넌트 호출시 props로 Carlist의 addcar 메서드를 전달하고 있음
-    props.addCar(car);
+    props.updateCar(car, props.data.id);
     handleClose();
   };
-  // 모달 창 여는 버튼은 Dialog 컴포넌트 밖에 있어야 함
   return (
     <div>
-      <button onClick={handleClickOpen}>New Car</button>
+      <button onClick={handleClickOpen}>Edit</button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>New car</DialogTitle>
+        <DialogTitle>Edit car</DialogTitle>
         <DialogContent>
           <input
             placeholder="Brand"
@@ -77,7 +81,6 @@ const AddCar = (props) => {
             value={car.price}
             onChange={handleChange}
           />
-          <br />
         </DialogContent>
         <DialogActions>
           <button onClick={handleClose}>Cancel</button>
@@ -88,4 +91,4 @@ const AddCar = (props) => {
   );
 };
 
-export default AddCar;
+export default EditCar;

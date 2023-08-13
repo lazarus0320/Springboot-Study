@@ -62,7 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		source.registerCorsConfiguration("/**", config);
 		return source;
 	}
-	
+
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth)
 			throws Exception  {
