@@ -34,16 +34,25 @@ const Carlist = () => {
   ];
 
   const fetchCars = () => {
-    fetch(SERVER_URL + 'api/cars')
+    const token = sessionStorage.getItem('jwt');
+
+    fetch(SERVER_URL + 'api/cars', {
+      headers: { Authorization: token },
+    })
       .then((response) => response.json())
       .then((data) => setCars(data._embedded.cars))
       .catch((err) => console.log(err));
   };
 
   const addCar = (car) => {
+    const token = sessionStorage.getItem('jwt');
+
     fetch(SERVER_URL + 'api/cars', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
       body: JSON.stringify(car),
     })
       .then((response) => {
@@ -58,7 +67,8 @@ const Carlist = () => {
 
   const onDelClick = (url) => {
     if (window.confirm('Are you sure to delete?')) {
-      fetch(url, { method: 'DELETE' })
+      const token = sessionStorage.getItem('jwt');
+      fetch(url, { method: 'DELETE', headers: { Authorization: token } })
         .then((response) => {
           if (response.ok) {
             fetchCars();
@@ -72,9 +82,14 @@ const Carlist = () => {
   };
 
   const updateCar = (car, link) => {
+    const token = sessionStorage.getItem('jwt');
+
     fetch(link, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
       body: JSON.stringify(car),
     })
       .then((response) => {

@@ -34,19 +34,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// 프론트 mocking-up 과정에서 임시로 모든 사용자가 모든 엔드포인트에 접근할 수 있도록 허용
-		http.csrf().disable().cors().and()
-				.authorizeRequests().anyRequest().permitAll();
+//		// 프론트 mocking-up 과정에서 임시로 모든 사용자가 모든 엔드포인트에 접근할 수 있도록 허용
 //		http.csrf().disable().cors().and()
-//		.sessionManagement()
-//		.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-//		.authorizeRequests()
-//		.antMatchers(HttpMethod.POST, "/login").permitAll()
-//		.anyRequest().authenticated().and()
-//		.exceptionHandling()
-//		.authenticationEntryPoint(exceptionHandler).and()
-//		.addFilterBefore(authenticationFilter,
-//				UsernamePasswordAuthenticationFilter.class);
+//				.authorizeRequests().anyRequest().permitAll();
+
+		http.csrf().disable().cors().and()
+		.sessionManagement()
+		.sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+		.authorizeRequests()
+		.antMatchers(HttpMethod.POST, "/login").permitAll()
+		.anyRequest().authenticated().and()
+		.exceptionHandling()
+		.authenticationEntryPoint(exceptionHandler).and()
+		.addFilterBefore(authenticationFilter,
+				UsernamePasswordAuthenticationFilter.class);
 	}	
 
 	@Bean
