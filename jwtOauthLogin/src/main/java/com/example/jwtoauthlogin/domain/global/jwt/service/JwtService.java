@@ -1,4 +1,4 @@
-package com.example.jwtoauthlogin.domain.jwt.service;
+package com.example.jwtoauthlogin.domain.global.jwt.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
