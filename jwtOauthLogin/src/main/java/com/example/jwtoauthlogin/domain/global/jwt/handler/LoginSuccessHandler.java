@@ -9,8 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -38,8 +40,8 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
      * updateRefreshToken()으로 업데이트 후 saveAndFlush()로 DB에 반영합니다.
      */
     @Override
-    public void onAuthenticationSuceess(HttpServletRequest request, HttpServletResponse response,
-                                        Authentication authentication) {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException, ServletException {
         String email = extractUsername(authentication);
         String accessToken = jwtService.createAccessToken(email);
         String refreshToken = jwtService.createRefreshToken();
