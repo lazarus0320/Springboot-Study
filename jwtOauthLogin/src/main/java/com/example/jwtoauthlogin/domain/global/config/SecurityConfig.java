@@ -1,5 +1,6 @@
 package com.example.jwtoauthlogin.domain.global.config;
 
+import com.example.jwtoauthlogin.domain.global.jwt.filter.CustomJsonUsernamePasswordAuthenticationFilter;
 import com.example.jwtoauthlogin.domain.global.jwt.service.JwtService;
 import com.example.jwtoauthlogin.domain.global.jwt.service.LoginService;
 import com.example.jwtoauthlogin.domain.global.oauth2.handler.OAuth2LoginFailureHandler;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 
 /**
  * 인증은 CustomJsonUsernamePasswordAuthenticationFilter에서 authenticate()로 인증된 사용자로 처리
@@ -31,22 +33,39 @@ public class SecurityConfig {
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final CustomOAuth2UserService customOAuth2UserService;
 
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .formLogin().disable()
-//                .httpBasic().disable()
-//                .csrf().disable()
-//                .headers().frameOptions().disable()
-//                .and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                //== URL별 권한 관리 옵션 ==//
-//                .authorizeHttpRequests()
-//                // 아이콘, css, js 관련
-//                // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능, h2-console에 접근 가능
-//                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
-//                .antMatchers("/sign-up").permitAll()
-//                .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
-//    }
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .formLogin().disable()
+                .httpBasic().disable()
+                .csrf().disable()
+                .headers().frameOptions().disable()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+
+                //== URL별 권한 관리 옵션 ==//
+                .authorizeHttpRequests()
+                // 아이콘, css, js 관련
+                // 기본 페이지, css, image, js 하위 폴더에 있는 자료들은 모두 접근 가능, h2-console에 접근 가능
+                .antMatchers("/", "/css/**", "/images/**", "/js/**", "/favicon.ico", "/h2-console/**").permitAll()
+                .antMatchers("/sign-up").permitAll()
+                .anyRequest().authenticated() // 위의 경로 이외에는 모두 인증된 사용자만 접근 가능
+                .and()
+
+                // 소셜 로그인 설정
+                .oauth2Login()
+                .successHandler(oAuth2LoginSuccessHandler)
+                .failureHandler(oAuth2LoginFailureHandler)
+                .userInfoEndpoint().userService(customOAuth2UserService);
+
+        // 원래 스프링 시큐리티 필터 순서가 LogoutFilter 이후에 로그인 필터 동작
+        // 따라서, LogoutFilter 이후에 우리가 만든 필터 동작하도록 설정
+        // 순서 : LogoutFilter -> JwtAuthenticationProcessingFilter -> CustomJsonUsernamePasswordAuthenticationFilter
+        http.addFilterAfter(customJsonUsernamePasswordAuthenticationFilter(), LogoutFilter.class);
+        http.addFilterBefore(jwtAuthenticationProcessingFilter(), CustomJsonUsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+
+    }
 }
