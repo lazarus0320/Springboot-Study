@@ -3,6 +3,7 @@ package com.example.jwttest.jwt.configuration;
 import com.example.jwttest.jwt.security.JwtAccessDeniedHandler;
 import com.example.jwttest.jwt.security.JwtAuthenticationEntryPoint;
 import com.example.jwttest.jwt.security.JwtAuthenticationFilter;
+import com.example.jwttest.jwt.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;

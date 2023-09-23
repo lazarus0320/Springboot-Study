@@ -4,6 +4,7 @@ import com.example.jwttest.jwt.dto.AuthDto;
 import com.example.jwttest.jwt.service.AuthService;
 import com.example.jwttest.jwt.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class AuthApiController {
     private final AuthService authService;
     private final UserService userService;
@@ -63,7 +65,7 @@ public class AuthApiController {
     public ResponseEntity<?> reissue(@CookieValue(name = "refresh-token") String requestRefreshToken,
                                      @RequestHeader("Authorization") String requestAccessToken) {
         AuthDto.TokenDto reissueTokenDto = authService.reissue(requestAccessToken, requestRefreshToken);
-
+        log.debug(String.valueOf(reissueTokenDto));
         if (reissueTokenDto != null) {
             // 토큰 재발급 성공? -> RT 저장
             ResponseCookie responseCookie = ResponseCookie.from("refresh-token", reissueTokenDto.getRefreshToken())

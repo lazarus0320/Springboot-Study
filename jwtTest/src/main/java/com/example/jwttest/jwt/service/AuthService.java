@@ -70,7 +70,7 @@ public class AuthService {
     @Transactional
     public AuthDto.TokenDto reissue(String requestAccessTokenInHeader, String requestRefreshToken) {
         String requestAccessToken = resolveToken(requestAccessTokenInHeader);
-
+        log.debug(requestAccessToken);
         Authentication authentication = jwtTokenProvider.getAuthentication(requestAccessToken);
         String principal = getPrincipal(requestAccessToken);
 
@@ -78,7 +78,8 @@ public class AuthService {
         if (refreshTokenInRedis == null) { // Redis에 저장되어 있는 RT가 없을 경우
             return null; // -> 재로그인 요청
         }
-
+        System.out.println(refreshTokenInRedis);
+        System.out.println(requestRefreshToken);
         // 요청된 RT의 유효성 검사 & Redis에 저장되어 있는 RT와 같은지 비교
         if(!jwtTokenProvider.validateRefreshToken(requestRefreshToken) || !refreshTokenInRedis.equals(requestRefreshToken)) {
             redisService.deleteValues("RT(" + SERVER + "):" + principal); // 탈취 가능성 -> 삭제
@@ -138,6 +139,7 @@ public class AuthService {
     // "Bearer {AT}"에서 {AT} 추출
     public String resolveToken(String requestAccessTokenInHeader) {
         if (requestAccessTokenInHeader != null && requestAccessTokenInHeader.startsWith("Bearer ")) {
+            log.debug(requestAccessTokenInHeader.substring(7));
             return requestAccessTokenInHeader.substring(7);
         }
         return null;

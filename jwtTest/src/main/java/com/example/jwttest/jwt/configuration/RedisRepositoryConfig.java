@@ -10,12 +10,15 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-@RequiredArgsConstructor
 @Configuration
 @EnableRedisRepositories
 public class RedisRepositoryConfig {
 
     private final RedisProperties redisProperties;
+
+    public RedisRepositoryConfig(RedisProperties redisProperties) {
+        this.redisProperties = redisProperties;
+    }
 
     // lettuce
     @Bean
