@@ -1,5 +1,6 @@
 package com.example.jwttest.jwt.domain;
 
+import com.example.jwttest.jwt.dto.AuthDto;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

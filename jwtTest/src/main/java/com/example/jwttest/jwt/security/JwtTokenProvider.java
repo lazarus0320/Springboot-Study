@@ -1,5 +1,6 @@
 package com.example.jwttest.jwt.security;
 
+import com.example.jwttest.jwt.dto.AuthDto;
 import com.example.jwttest.jwt.service.RedisService;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
