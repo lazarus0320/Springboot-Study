@@ -107,10 +107,10 @@ public class JwtTokenProvider implements InitializingBean {
 
     // == 토큰 검증 == //
 
-    public boolean validateRefreshToken(String refreshToken){
+    public boolean validateRefreshToken(String key, String refreshToken){
         System.out.println("refreshToken: " + refreshToken);
         try {
-            if (redisService.getValues(refreshToken).equals("delete")) { // 회원 탈퇴했을 경우
+            if (redisService.getValues(key).equals("delete")) { // 회원 탈퇴했을 경우
                 return false;
             }
             Jwts.parserBuilder()
